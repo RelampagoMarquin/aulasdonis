@@ -1,0 +1,22 @@
+<div class="card mb-3" style="max-width: 540px;">
+    <div class="row g-0">
+      <div class="col-md-4">
+        @if (imagemSrc)
+            <img src="{{imagemSrc}}" class="img-fluid rounded-start" alt="...">
+        @end
+    </div>
+      <div class="col-md-8">
+        <div class="card-body">
+        @if(title)
+          <h5 class="card-title">{{title}}</h5>
+        @end
+        {{-- @if(body) --}}
+          <p class="card-text">{{{await $slots.main()}}}</p>
+       {{-- @end--}}
+        @if (link && buttonText)
+          <a href="{{link}}" class="card-text btn btn-primary "><small class="">{{buttonText}}</small></a>
+          @end
+        </div>
+      </div>
+    </div>
+  </div>

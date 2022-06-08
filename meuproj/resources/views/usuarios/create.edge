@@ -1,0 +1,10 @@
+@layout('layouts/main')
+
+@section('conteudo')
+<h1>Cadastro de usuário</h1>
+
+@!component('usuarios/_form', {
+    rota: route('usuario.store'),
+    dados: usuario
+})
+@end
