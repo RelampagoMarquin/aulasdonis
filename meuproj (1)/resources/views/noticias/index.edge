@@ -1,0 +1,29 @@
+@layout('layouts/main')
+@section('conteudo')
+
+<h1>Notícias</h1>
+<div class="mb-3">
+    <a href="{{ route('noticia.create')}}" class="btn btn-primary">Cadastrar</a>
+</div>
+<div class="row">
+    @each(noticia in noticias)
+    <div class="col-12 col-md-4">
+      @component('components/card', {
+      title: noticia.titulo,
+    })
+    <a class="btn btn-primary" href="{{route('noticia.edit', { id: noticia.id })}}">
+        Editar
+    </a>
+    <a class="btn btn-danger" href="{{route('noticia.delete', { id: noticia.id })}}">
+        Remover
+    </a>
+    @end
+    </div>
+    
+
+    @end
+
+</div>
+
+@end
+
