@@ -9,21 +9,23 @@ export default class NoticiasController {
         })
     }
     /**
-     * Busca e deleta
+     * Renderiza o formulário de cadastro
      * @param param0 
      */
-    async create ({view, session} : HttpContextContract){
+    async create ({view, session, bouncer} : HttpContextContract){
+        bouncer.authorize('noticiaCreate')     
         const noticia = session.flashMessages.get('noticia') || {}
         return view.render('noticias/create', {
             noticia
         })
     }
     /**
-     * Renderiza o formulário de cadastro
+     * Busca e deleta
      * @param param0 
      */
-    async delete ({ params, response } : HttpContextContract){
+    async delete ({ params, response, bouncer } : HttpContextContract){
         try{
+            bouncer.authorize('noticiaDelete')
             const noticia = await Noticia.findOrFail(params.id)
             await noticia.delete()
         }catch(e){
@@ -35,7 +37,8 @@ export default class NoticiasController {
      * Guardar os dados do cadastro BD
      * @param param0 
      */
-    async  store({ request, response, session} : HttpContextContract){
+    async  store({ request, response, session, bouncer} : HttpContextContract){
+        bouncer.authorize('noticiaCreate')  
         const dados = request.only(['titulo', 'conteudo', 'chamada'])
         try {
             await Noticia.create(dados)
@@ -51,17 +54,25 @@ export default class NoticiasController {
      * Exibe o formulário de alteração, e chama o processo de busca novamente
      * @param param0 
      */ 
-    async  edit({params, view} : HttpContextContract){
-        const noticia = await Noticia.findOrFail(params.id)
-        return view.render('noticias/edit', {
+    async  edit({params, view, bouncer} : HttpContextContract){
+        try {
+            bouncer.authorize('noticiaUpdate')
+            const noticia = await Noticia.findOrFail(params.id)
+            return view.render('noticias/edit', {
             noticia
         })
+        } catch (e) {
+            console.log('O ERRO É:')
+            console.log(e)
+        }
+        
     }
     /**
      * Armazena as alterações do formulário para o BD, também chama o processo de busca e de salvamento
      * @param param0 
      */
-    async  update({params, request, response} : HttpContextContract){
+    async  update({params, request, response, bouncer} : HttpContextContract){
+        bouncer.authorize('noticiaUpdate')
         const noticia = await Noticia.findOrFail(params.id)
         noticia.merge(request.only(['titulo', 'conteudo', 'chamada']))
         try {

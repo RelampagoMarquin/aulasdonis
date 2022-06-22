@@ -20,7 +20,7 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.get('/', 'SitesController.index')
+Route.get('/', 'SitesController.index').as('index')
 
 //Route.get('/noticia/cadastrar', 'SitesController.create')
 Route.group(() => {
@@ -30,7 +30,7 @@ Route.group(() => {
     Route.get('/:id/edit', 'NoticiasController.edit').where('id', /^[0-9]+$/).as('noticia.edit')
     Route.post('/:id/edit', 'NoticiasController.update').where('id', /^[0-9]+$/).as('noticia.update')
     Route.get('/:id/delete', 'NoticiasController.delete').where('id', /^[0-9]+$/).as('noticia.delete')
-}).prefix('/noticia')
+}).prefix('/noticia').middleware('auth')
 
 Route.group(() => {
     Route.get('/', 'UsersController.index').as('usuario.index')
@@ -39,11 +39,11 @@ Route.group(() => {
     Route.get('/:id/edit', 'UsersController.edit').where('id', /^[0-9]+$/).as('usuario.edit')
     Route.post('/:id/edit', 'UsersController.update').where('id', /^[0-9]+$/).as('usuario.update')
     Route.get('/:id/delete', 'UsersController.delete').where('id', /^[0-9]+$/).as('usuario.delete')
-}).prefix('/usuario')
+}).prefix('/usuario').middleware('auth') ///o middware restringe a esta logado
 
 
 Route.group(() => {
     Route.get('/login', 'AuthController.index').as('auth.index')
     Route.post('/login', 'AuthController.login').as('auth.login')
-    Route.get('/logout', 'AuthController.logout').as('auth.logout')
+    Route.get('/logout', 'AuthController.logout').as('auth.logout').middleware('auth')
 }).prefix('/auth')

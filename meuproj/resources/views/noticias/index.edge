@@ -2,21 +2,27 @@
 @section('conteudo')
 
 <h1>Notícias</h1>
+@can('noticiaCreate')
 <div class="mb-3">
     <a href="{{ route('noticia.create')}}" class="btn btn-primary">Cadastrar</a>
 </div>
+@end
 <div class="row">
     @each(noticia in noticias)
     <div class="col-12 col-md-4">
       @component('components/card', {
       title: noticia.titulo,
     })
+    @can('noticiaUpdate')
     <a class="btn btn-primary" href="{{route('noticia.edit', { id: noticia.id })}}">
         Editar
     </a>
+    @end
+    @can('noticiaDelete')
     <a class="btn btn-danger" href="{{route('noticia.delete', { id: noticia.id })}}">
         Remover
     </a>
+    @end
     @end
     </div>
     

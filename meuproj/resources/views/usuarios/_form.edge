@@ -7,6 +7,13 @@
       <label class="form-label">login</label>
       <input type="text" name="login" class="form-control" value="{{ dados?.login || '' }}">
     </div>
+    <div class="mb--3">
+      <label class="form-label">Papel</label>
+      <select name="papel" class="form-select">
+        <option value="administrador" {{dados?.papel == 'administrador' ? 'selected' : '' }}>Administrador</option>
+        <option value="usuario" {{dados?.papel == 'usuario' ? 'selected' : '' }}>usuario</option>
+      </select>
+    </div>
     <div class="mb-3">senha
       <label class="form-label">senha 
         @if (alterar)

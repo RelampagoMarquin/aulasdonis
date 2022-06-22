@@ -21,8 +21,8 @@ export default class AuthController {
         }
     }
 
-    async logaout ({auth, response} : HttpContextContract){
+    async logout ({auth, response} : HttpContextContract){
         await auth.use('web').logout()
-        return response.redirect('auth.login')
+        return response.redirect().toRoute('auth.login')
     }
 }

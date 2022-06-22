@@ -36,7 +36,7 @@ export default class UsersController {
      * @param param0 
      */
     async  store({ request, response, session} : HttpContextContract){
-        const dados = request.only(['login', 'senha', 'nome'])
+        const dados = request.only(['login', 'senha', 'nome', 'papel'])
         try {
             await User.create(dados)
             return response.redirect().toRoute('usuario.index')
@@ -64,8 +64,8 @@ export default class UsersController {
      */
     async  update({params, request, response} : HttpContextContract){
         const usuario = await User.findOrFail(params.id)
-        usuario.merge(request.only(['login', 'nome']))
-        if (request.input('senha') != ''){
+        usuario.merge(request.only(['login', 'nome', 'papel']))
+        if (request.input('senha')){
             usuario.senha = request.input('senha')
         }
         try {
