@@ -2,27 +2,26 @@ import { DateTime } from 'luxon'
 import { 
   BaseModel, 
   column, 
-  hasMany, 
-  HasMany,
-  
-} from '@ioc:Adonis/Lucid/Orm'
-import NoticiaComentario from './NoticiaComentario'
+  belongsTo,
+  BelongsTo
 
-export default class Noticia extends BaseModel {
+} from '@ioc:Adonis/Lucid/Orm'
+import Noticia from './Noticia'
+
+export default class NoticiaComentario extends BaseModel {
+  public static table = 'noticia_comentarios'
+
   @column({ isPrimary: true })
   public id: number
 
   @column()
-  public titulo:string
-  
-  @column()
-  public conteudo: string
+  public comentario: string
 
   @column()
-  public chamada: string
+  public noticiaId: number
 
-  @hasMany(() => NoticiaComentario)
-  public comentarios: HasMany<typeof NoticiaComentario>
+  @belongsTo(() => Noticia)
+  public noticia: BelongsTo<typeof Noticia>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

@@ -1,0 +1,20 @@
+@layout('layouts/main')
+
+@section('conteudo')
+<h1>{{noticia.titulo}}</h1>
+    <div>
+        {{noticia.conteudo}}
+    </div>
+<section>
+    <h2>Deixe seu comentario</h2>
+    <form action="{{route('noticia.comment, {id: noticia.id}')}}" method="POST">
+        <div class="mb-2">
+            <label name="comentario">Comentario</label>
+            <textarea name="comentario" id="comentario" cols="30" rows="10"></textarea>
+        </div>
+        <div>
+            <button class="btn btn-success">Enviar</button>
+        </div>
+    </form>
+</section>
+@end

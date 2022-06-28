@@ -84,5 +84,22 @@ export default class NoticiasController {
         return response.redirect().toRoute('noticia.index')
     }
 
+    async  view({view, params, response} : HttpContextContract){
+        const noticia = await Noticia.query().where('id', params.id).first()
+        if (noticia) {
+            return view.render('noticias/view', {
+                noticia
+            })
+        } else {
+            return response.redirect().back()
+        }
+    }
+
+    async  createComment({ response, params, request} : HttpContextContract){
+        const noticia = await Noticia.findOrFail(params.id)
+        await noticia.related('comentarios').create(request.only(['comentario']))
+        return response.redirect().back()
+    }
+
 }
     

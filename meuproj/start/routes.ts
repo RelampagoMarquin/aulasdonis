@@ -30,6 +30,8 @@ Route.group(() => {
     Route.get('/:id/edit', 'NoticiasController.edit').where('id', /^[0-9]+$/).as('noticia.edit')
     Route.post('/:id/edit', 'NoticiasController.update').where('id', /^[0-9]+$/).as('noticia.update')
     Route.get('/:id/delete', 'NoticiasController.delete').where('id', /^[0-9]+$/).as('noticia.delete')
+    Route.get('/:id/view', 'NoticiasController.view').where('id', /^[0-9]+$/).as('noticia.view')
+    Route.post('/:id/comment', 'NoticiasController.createComment').where('id', /^[0-9]+$/).as('noticia.comment')
 }).prefix('/noticia').middleware('auth')
 
 Route.group(() => {
