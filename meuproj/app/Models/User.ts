@@ -1,5 +1,10 @@
 import { DateTime } from 'luxon'
-import { BaseModel, beforeSave, column, computed } from '@ioc:Adonis/Lucid/Orm'
+import { 
+  BaseModel, 
+  beforeSave, 
+  column, 
+  computed,
+} from '@ioc:Adonis/Lucid/Orm'
 import Hash from '@ioc:Adonis/Core/Hash'
 
 export default class User extends BaseModel {

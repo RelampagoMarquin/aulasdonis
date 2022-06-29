@@ -7,14 +7,27 @@
     </div>
 <section>
     <h2>Deixe seu comentario</h2>
-    <form action="{{route('noticia.comment, {id: noticia.id}')}}" method="POST">
+    <form action="{{route('noticia.comment', {id: noticia.id})}}" method="POST">
         <div class="mb-2">
             <label name="comentario">Comentario</label>
-            <textarea name="comentario" id="comentario" cols="30" rows="10"></textarea>
+            <textarea name="comentario" id="comentario" class="form-control"></textarea>
         </div>
         <div>
             <button class="btn btn-success">Enviar</button>
         </div>
     </form>
 </section>
+
+@if(noticia.comentarios)
+<section>
+    <h2>Comentarios</h2>
+    
+    @each (comentario in noticia.comentarios)
+        <p>
+            {{comentario.comentario}}
+        </p>
+    @end
+    
+</section>
+@end
 @end

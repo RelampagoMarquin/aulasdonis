@@ -85,7 +85,7 @@ export default class NoticiasController {
     }
 
     async  view({view, params, response} : HttpContextContract){
-        const noticia = await Noticia.query().where('id', params.id).first()
+        const noticia = await Noticia.query().preload('comentarios').where('id', params.id).first()
         if (noticia) {
             return view.render('noticias/view', {
                 noticia
@@ -95,9 +95,14 @@ export default class NoticiasController {
         }
     }
 
-    async  createComment({ response, params, request} : HttpContextContract){
+    async  createComment({ response, params, request, auth} : HttpContextContract){
+        
         const noticia = await Noticia.findOrFail(params.id)
-        await noticia.related('comentarios').create(request.only(['comentario']))
+        const comentario ={
+            ...request.only(['comentario']),
+            userId:auth.use('web').user?.id
+        }
+        await noticia.related('comentarios').create(comentario)
         return response.redirect().back()
     }
 
