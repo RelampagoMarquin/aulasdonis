@@ -1,0 +1,11 @@
+@layout('layouts/main')
+
+@section('conteudo')
+<h1>Alterar noticia</h1>
+
+@!component('usuarios/_form', {
+    rota: route('usuarios.update', { id: usuario.id }),
+    alterar: true,
+    dados: usuario
+})
+@end

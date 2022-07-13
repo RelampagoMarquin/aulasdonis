@@ -1,0 +1,12 @@
+@layout('layouts/main')
+
+@section('conteudo')
+<form action="{{ route('twitter.store') }}" method="POST">
+    <div class="mb-2">
+        <textarea name="post" class="form-control"  placeholder="fale algo"></textarea>
+    </div>
+    <div>
+        <button type="submit" class="btn btn-success">Postar</button>
+    </div>
+</form>
+@end

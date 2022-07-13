@@ -1,0 +1,10 @@
+#!/bin/bash
+FOLDER=$(basename $PWD)
+APP_PREFIX="${FOLDER}_app"
+CONTAINER_NAME=$(docker container ls -f "name=${APP_PREFIX}" --format "{{.Names}}")
+docker run -it -u $(id -u ${USER}):$(id -g ${USER}) --rm -v "$PWD":"$PWD" -w "$PWD" --network="host" node:18-alpine3.14 $@
+# if [ ! -z "${CONTAINER_NAME}" ]; then
+#     docker exec -it ${CONTAINER_NAME} $@
+# else
+#     echo "O container não está em execução"
+# fi

@@ -1,0 +1,21 @@
+@layout('layouts/main')
+
+@section('conteudo')
+<h1>Autenticação</h1>
+
+<form action="{{ route('auth.login') }}" method="post">
+    <div class="mb-3">
+        <label class="form-label">Login</label>
+        <input type="text" name="login" class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Senha</label>
+        <input type="password" name="senha" class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary">Entrar</button>
+    </div>
+</form>
+@end

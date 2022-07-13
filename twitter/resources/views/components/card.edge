@@ -1,0 +1,21 @@
+<div class="card">
+    @if (imageSrc)
+        <img src="{{ imageSrc }}" class="card-img-top" alt="...">
+    @end
+    <div class="card-body">
+        @if (title)
+            <h5 class="card-title">{{ title }}</h5>
+        @end
+        {{--  @if (body)  --}}
+        <p class="card-text">
+            {{{ await $slots.main() }}}
+        </p>
+        {{--  @end  --}}
+
+        @if (link && buttonText)
+            <a href="{{ link }}" class="btn btn-primary">
+            {{buttonText}}
+            </a>
+        @end
+    </div>
+</div>

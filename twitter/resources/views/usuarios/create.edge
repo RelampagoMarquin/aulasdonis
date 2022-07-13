@@ -1,0 +1,11 @@
+@layout('layouts/main')
+
+@section('conteudo')
+    <!-- create.edge -->
+    <h1>Cadastro de usuário</h1>
+
+    @!component('usuarios/_form', {
+        rota: route('usuarios.store'),
+        dados: usuario
+    })
+@end
