@@ -5,10 +5,12 @@ import {
   BelongsTo, 
   column, 
   HasMany, 
-  hasMany
+  hasMany,
+  scope,
 } from '@ioc:Adonis/Lucid/Orm'
 import User from './User'
 import Comment from './Comment'
+import Friend from './Friend'
 
 export default class Post extends BaseModel {
   @column({ isPrimary: true })
@@ -34,4 +36,23 @@ export default class Post extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  public static notDeleted = scope((query) => {
+    query.where('is_deleted', false)
+  })
+
+  public static timeLineOfUser = scope((query, user: User) => {
+    const queryIds1 = Friend.query()
+      .select('user_id1')
+      .where('user_id2', user.id)
+
+    const queryIds2 = Friend.query()
+      .select('user_id2')
+      .where('user_id1', user.id)
+
+    query.orWhere('user_id', 'in', queryIds1)
+    query.orWhere('user_id', 'in', queryIds2)
+    query.orWhere('user_id', user.id)
+    query.orderBy('id', 'desc')
+  })
 }

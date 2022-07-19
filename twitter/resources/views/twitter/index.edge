@@ -9,4 +9,18 @@
         <button type="submit" class="btn btn-success">Postar</button>
     </div>
 </form>
+    @if(posts)
+        <h2>Postagens</h2>
+        <div>
+            @each (post in posts)
+            <section>
+                <strong>{{post.user.login}}</strong> escreveu
+                @can('deletePost', post) 
+                (<a href="{{route('twitter.delete', {id: post.id})}}">delete</a>):
+                @end
+                <p>{{post.post}}</p>
+            </section>
+            @end
+        </div>
+    @end
 @end

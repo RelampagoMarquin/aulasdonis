@@ -20,7 +20,7 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.get('/', 'TwitterController.index').as('index')
+Route.get('/', 'TwitterController.index').as('index').middleware('auth')
 
 Route.group(() => {
   Route.get('/', 'UsersController.index')
@@ -49,4 +49,5 @@ Route.group(() => {
 
 Route.group(() => {
     Route.post('/post','TwitterController.store').as('twitter.store')
-  }).prefix('/twitter').middleware('auth')
+    Route.get('/:id/delete','TwitterController.delete').as('twitter.delete')
+  }).prefix('/twitter').middleware('auth').where('id', /^[0-9]+$/)
