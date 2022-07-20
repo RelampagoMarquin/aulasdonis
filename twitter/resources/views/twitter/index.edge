@@ -3,24 +3,41 @@
 @section('conteudo')
 <form action="{{ route('twitter.store') }}" method="POST">
     <div class="mb-2">
-        <textarea name="post" class="form-control"  placeholder="fale algo"></textarea>
+        <textarea name="post" class="form-control" placeholder="fale algo"></textarea>
     </div>
     <div>
         <button type="submit" class="btn btn-success">Postar</button>
     </div>
 </form>
-    @if(posts)
-        <h2>Postagens</h2>
-        <div>
-            @each (post in posts)
-            <section>
-                <strong>{{post.user.login}}</strong> escreveu
-                @can('deletePost', post) 
-                (<a href="{{route('twitter.delete', {id: post.id})}}">delete</a>):
+@if(posts)
+<h2>Postagens</h2>
+<div>
+    @each (post in posts)
+    <section class="mb-4">
+        <strong>{{post.user.login}}</strong> escreveu
+        @can('deletePost', post)
+        (<a href="{{route('twitter.delete', {id: post.id})}}">delete</a>):
+        @end
+        <p>{{post.post}}</p>
+        <section>
+            <h6>Comentarios</h6>
+            <form method="post" action="{{route('twitter.comment.store', {id: post.id}) }}" class="d-flex">
+                <input type="text" name="comment" class="form-control" id="comment">
+                <button type="submit" class="btn btn-success">Enviar</button>
+            </form>
+            <div>
+                @each(comment in post.comments)
+                <strong>{{comment.user.login}}</strong>
+                @can('deleteComment', comment)
+                (<a href="{{route('twitter.comment.delete', {id: comment.id})}}">delete</a>):
+                @end 
+                Comentou:
+                <p>{{comment.comment}}</p>
                 @end
-                <p>{{post.post}}</p>
-            </section>
-            @end
-        </div>
+            </div>
+        </section>
+    </section>
     @end
+</div>
+@end
 @end

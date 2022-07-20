@@ -48,11 +48,11 @@ export default class Post extends BaseModel {
 
     const queryIds2 = Friend.query()
       .select('user_id2')
-      .where('user_id1', user.id)
-
-    query.orWhere('user_id', 'in', queryIds1)
-    query.orWhere('user_id', 'in', queryIds2)
-    query.orWhere('user_id', user.id)
+      .where((builder) => {
+        builder.orWhere('user_id', 'in', queryIds1)
+        builder.orWhere('user_id', 'in', queryIds2)
+        builder.orWhere('user_id', user.id)
+      })
     query.orderBy('id', 'desc')
   })
 }

@@ -50,4 +50,6 @@ Route.group(() => {
 Route.group(() => {
     Route.post('/post','TwitterController.store').as('twitter.store')
     Route.get('/:id/delete','TwitterController.delete').as('twitter.delete')
+    Route.post('/:id/comment','TwitterController.storeComment').as('twitter.comment.store')
+    Route.get('/:id/comment/delete','TwitterController.deleteComment').as('twitter.comment.delete')
   }).prefix('/twitter').middleware('auth').where('id', /^[0-9]+$/)
