@@ -10,13 +10,20 @@
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="{{ route('index') }}">Home</a>
           </li>
-          {{--  <li class="nav-item">
-            <a class="nav-link" href="{{ route('noticias.index') }}">Notícias</a>
-          </li>  --}}
           <li class="nav-item">
             <a class="nav-link" href="{{ route('usuarios.index') }}">Usuários</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ route('twitter.users') }}">Pessoas</a>
+          </li>
         </ul>
+        
+        <div>
+        <form class="d-flex" action="{{route('twitter.search', {login: 'mar'}) }}" method="GET" role="search">
+          <input class="form-control me-2" type="search" placeholder="Search" name="login" id="login" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+        </div>
 
         <div>
           @if(auth.isLoggedIn)

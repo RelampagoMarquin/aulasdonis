@@ -14,12 +14,17 @@
 <div>
     @each (post in posts)
     <section class="mb-4">
-        <strong>{{post.user.login}}</strong> escreveu
+        <strong>{{post.user.login}}</strong> 
+        @component('components/icon', {
+            usuario: post.user,
+        })
+        @end
+        escreveu:
         @can('deletePost', post)
-        (<a href="{{route('twitter.delete', {id: post.id})}}">delete</a>):
+        <a href="{{route('twitter.delete', {id: post.id})}}"><i class="bi bi-trash3-fill text-danger"></i></a>:
         @end
         <p>{{post.post}}</p>
-        <section>
+        <section class="ms-3">
             <h6>Comentarios</h6>
             <form method="post" action="{{route('twitter.comment.store', {id: post.id}) }}" class="d-flex">
                 <input type="text" name="comment" class="form-control" id="comment">
@@ -27,9 +32,9 @@
             </form>
             <div>
                 @each(comment in post.comments)
-                <strong>{{comment.user.login}}</strong>
+                <strong>{{comment.user.login}}</strong> <a href="{{route('twitter.follow', {id: post.user.id}) }}"><i class="bi bi-egg-fried"></i></a> 
                 @can('deleteComment', comment)
-                (<a href="{{route('twitter.comment.delete', {id: comment.id})}}">delete</a>):
+                <a href="{{route('twitter.comment.delete', {id: comment.id})}}"><i class="bi bi-trash3 text-danger"></i></a>:
                 @end 
                 Comentou:
                 <p>{{comment.comment}}</p>

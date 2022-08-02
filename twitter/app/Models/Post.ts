@@ -42,17 +42,14 @@ export default class Post extends BaseModel {
   })
 
   public static timeLineOfUser = scope((query, user: User) => {
-    const queryIds1 = Friend.query()
-      .select('user_id1')
-      .where('user_id2', user.id)
+    const queryIds1 = Friend.query().select('user_id1').where('user_id2',user.id)
+    const queryIds2 = Friend.query().select('user_id2').where('user_id1',user.id)
 
-    const queryIds2 = Friend.query()
-      .select('user_id2')
-      .where((builder) => {
-        builder.orWhere('user_id', 'in', queryIds1)
-        builder.orWhere('user_id', 'in', queryIds2)
-        builder.orWhere('user_id', user.id)
-      })
-    query.orderBy('id', 'desc')
+    query.where((builder) => {
+      builder.orWhere('user_id','in',queryIds1)
+      builder.orWhere('user_id','in',queryIds2)
+      builder.orWhere('user_id',user.id)
+    })
+    query.orderBy('id','desc')
   })
 }

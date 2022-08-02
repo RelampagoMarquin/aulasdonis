@@ -1,6 +1,8 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Comment from 'App/Models/Comment'
+import Friend from 'App/Models/Friend'
 import Post from 'App/Models/Post'
+import User from 'App/Models/User'
 
 export default class TwitterController {
     async index({ view, auth }: HttpContextContract) {
@@ -11,7 +13,7 @@ export default class TwitterController {
             .preload('user')
             .preload('comments', (a)=>{
                 a.preload('user')
-                .withScopes((scope) => scope.notDeleted())
+                a.withScopes((scope) => scope.notDeleted())
             })
         return view.render('twitter/index', {
             posts
@@ -70,5 +72,43 @@ export default class TwitterController {
                 session.flash('erro', 'Erro ao cadastrar comment')
             }
         return response.redirect().back()
+    }
+
+    async follow({response, params, auth }: HttpContextContract) {
+        try {
+            const userIdA = await auth.use('web').user?.id
+            const t1 = await Friend.query().orWhere({userId1: params.id, userId2: userIdA})
+                .orWhere({userId2: params.id, userId1: userIdA})
+            if((t1.length == 0) && (userIdA != Number(params.id))){
+                await Friend.create({
+                    userId1: userIdA,
+                    userId2: params.id
+                })
+            }
+        }
+        catch (e) {
+            
+        }
+        response.redirect().back()
+    }
+
+    async search({ view, params}: HttpContextContract) {
+        const pesquisa = params.login
+        const usuarios = await User.query()
+            .orWhereILike('login', '%'+pesquisa+'%')
+            .orWhereILike('nome', '%'+pesquisa+'%')
+        return view.render('twitter/pesquisa', {
+            usuarios
+        })
+    }
+
+    async users ({ view, auth }: HttpContextContract) {
+        const id = await auth.use('web').user?.id
+        const usuarios = await User.query().orderBy('nome','asc')
+        .whereNot('id', id)
+
+        return view.render('twitter/pesquisa',{
+            usuarios
+        })
     }
 }

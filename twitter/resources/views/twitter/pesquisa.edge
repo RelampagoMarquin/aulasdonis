@@ -1,0 +1,21 @@
+@layout('layouts/main')
+
+@section('conteudo')
+<h1>Resultados</h1>
+<div class="row">
+    @each(usuario in usuarios)
+        <div class="col-12 col-md-4 mt-4">
+        @component('components/card', {
+            title: usuario.login,
+            nome: usuario.nome,
+        })
+
+        @component('components/icon', {
+            usuario: usuario,
+        })
+        @end
+        @end
+        </div>
+    @end
+</div>
+@end

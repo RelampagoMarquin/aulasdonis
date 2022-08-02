@@ -7,9 +7,10 @@
             <h5 class="card-title">{{ title }}</h5>
         @end
         {{--  @if (body)  --}}
-        <p class="card-text">
-            {{{ await $slots.main() }}}
-        </p>
+        @if(nome)
+            <p class="card-text"> {{ nome }}</p>
+        @end
+        {{{ await $slots.main() }}}
         {{--  @end  --}}
 
         @if (link && buttonText)
