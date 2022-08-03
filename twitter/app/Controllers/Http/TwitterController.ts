@@ -11,7 +11,7 @@ export default class TwitterController {
             .withScopes((scopes) => scopes.timeLineOfUser(auth.use('web').user))
             .withScopes((scopes) => scopes.notDeleted())
             .preload('user')
-            .preload('comments', (a)=>{
+            .preload('comments', (a) => {
                 a.preload('user')
                 a.withScopes((scope) => scope.notDeleted())
             })
@@ -74,12 +74,12 @@ export default class TwitterController {
         return response.redirect().back()
     }
 
-    async follow({response, params, auth }: HttpContextContract) {
+    async follow({ response, params, auth }: HttpContextContract) {
         try {
             const userIdA = await auth.use('web').user?.id
-            const t1 = await Friend.query().orWhere({userId1: params.id, userId2: userIdA})
-                .orWhere({userId2: params.id, userId1: userIdA})
-            if((t1.length == 0) && (userIdA != Number(params.id))){
+            const t1 = await Friend.query().orWhere({ userId1: params.id, userId2: userIdA })
+                .orWhere({ userId2: params.id, userId1: userIdA })
+            if ((t1.length == 0) && (userIdA != Number(params.id))) {
                 await Friend.create({
                     userId1: userIdA,
                     userId2: params.id
@@ -87,27 +87,46 @@ export default class TwitterController {
             }
         }
         catch (e) {
-            
+
         }
         response.redirect().back()
     }
 
-    async search({ view, params}: HttpContextContract) {
-        const pesquisa = params.login
+    async unFollow({ response, params, auth }: HttpContextContract) {
+        try {
+            const userId = await auth.use('web').user?.id
+            await Friend.query()
+            .orWhere({
+              'user_id1': userId,
+              'user_id2': params.id
+          })
+            .orWhere({
+            'user_id1': params.id,
+            'user_id2': userId
+          }).del()
+        }
+        catch (e) {
+
+        }
+        response.redirect().back()
+    }
+
+    async search({ view, request }: HttpContextContract) {
+        const pesquisa = request.input('login')
         const usuarios = await User.query()
-            .orWhereILike('login', '%'+pesquisa+'%')
-            .orWhereILike('nome', '%'+pesquisa+'%')
+            .orWhereILike('login', '%' + pesquisa + '%')
+            .orWhereILike('nome', '%' + pesquisa + '%')
         return view.render('twitter/pesquisa', {
             usuarios
         })
     }
 
-    async users ({ view, auth }: HttpContextContract) {
+    async users({ view, auth }: HttpContextContract) {
         const id = await auth.use('web').user?.id
-        const usuarios = await User.query().orderBy('nome','asc')
-        .whereNot('id', id)
+        const usuarios = await User.query().orderBy('nome', 'asc')
+            .whereNot('id', id)
 
-        return view.render('twitter/pesquisa',{
+        return view.render('twitter/pesquisa', {
             usuarios
         })
     }

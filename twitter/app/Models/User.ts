@@ -7,7 +7,7 @@ import {
   hasMany,
   HasMany,
   manyToMany,
-  ManyToMany, 
+  ManyToMany,
 } from '@ioc:Adonis/Lucid/Orm'
 import Hash from '@ioc:Adonis/Core/Hash'
 import Post from './Post'

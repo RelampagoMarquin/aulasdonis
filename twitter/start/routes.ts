@@ -53,6 +53,7 @@ Route.group(() => {
     Route.post('/:id/comment','TwitterController.storeComment').as('twitter.comment.store')
     Route.get('/:id/comment/delete','TwitterController.deleteComment').as('twitter.comment.delete')
     Route.get('/follow/:id','TwitterController.follow').as('twitter.follow')
-    Route.get('/search/:login','TwitterController.search').as('twitter.search')
+    Route.get('/unFollow/:id','TwitterController.unFollow').as('twitter.unFollow')
+    Route.get('/search','TwitterController.search').as('twitter.search')
     Route.get('/users','TwitterController.users').as('twitter.users')
   }).prefix('/twitter').middleware('auth').where('id', /^[0-9]+$/)

@@ -1,7 +1,7 @@
 @if(await auth.user.id != usuario.id)
     @if(await auth.user.hasFriend(usuario))
-        <a href="{{route('twitter.follow', {id: usuario.id}) }}"><i class="bi bi-egg-fried"></i></a>
+        <a href="{{route('twitter.unFollow', {id: usuario.id}) }}"><i class="bi bi-egg-fried text-warning"></i></a>
     @else
-        <a href="{{route('twitter.follow', {id: usuario.id}) }}"><i class="bi bi-egg"></i></a>
+        <a href="{{route('twitter.follow', {id: usuario.id}) }}"><i class="bi bi-egg text-black"></i></a>
     @end
 @end
