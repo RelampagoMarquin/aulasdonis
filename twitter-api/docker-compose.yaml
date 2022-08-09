@@ -1,0 +1,41 @@
+version: "3.7"
+services:
+  db57:
+    image: mysql:5.7
+    environment: 
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB_NAME}
+    ports:
+      - "${MYSQL_PORT}:3306"
+    volumes:
+      - mysql-twitter:/var/lib/mysql
+  app:
+    user: $DOCKER_USER
+    image: node:18-alpine3.14
+    working_dir: /app
+    env_file:
+      - .env
+    environment: 
+      - MYSQL_HOST=db57
+      - MYSQL_PORT=3306
+    command: sh -c "yarn dev"
+    ports:
+      - "${PORT}:${PORT}"
+    volumes:
+      - "./:/app"
+
+    depends_on: 
+      - db57
+  phpmyadmin:
+    image: phpmyadmin:latest
+    working_dir: /app
+    environment: 
+      PMA_HOST: "db57"
+      PMA_USER: ${MYSQL_USER}
+      PMA_PASSWORD: ${MYSQL_PASSWORD}
+      UPLOAD_LIMIT: 11431750
+    ports:
+      - "8080:80"
+volumes:
+  mysql-twitter:
+    driver: local
