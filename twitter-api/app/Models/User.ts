@@ -23,7 +23,7 @@ export default class User extends BaseModel {
   @column()
   public login: string
 
-  @column()
+  @column({ serializeAs: null })
   public senha: string
 
   @column()
