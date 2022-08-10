@@ -5,39 +5,40 @@ import Post from 'App/Models/Post'
 import User from 'App/Models/User'
 
 export default class TwitterController {
-    async index({ view, auth }: HttpContextContract) {
+    async index({ auth }: HttpContextContract) {
         const posts = await Post
             .query()
-            .withScopes((scopes) => scopes.timeLineOfUser(auth.use('web').user))
+            .withScopes((scopes) => scopes.timeLineOfUser(auth.use('api').user))
             .withScopes((scopes) => scopes.notDeleted())
             .preload('user')
             .preload('comments', (a) => {
                 a.preload('user')
                 a.withScopes((scope) => scope.notDeleted())
             })
-        return view.render('twitter/index', {
-            posts
-        })
+        // return view.render('twitter/index', {
+        //     posts
+        // })
     }
 
-    async store({ request, response, auth, session }: HttpContextContract) {
-        if (auth.use('web').user != null)
+    async store({ request, response, auth, }: HttpContextContract) {
+        if (auth.use('api').user != null){
             try {
                 const data = {
-                    userId: auth.use('web').user?.id,
+                    userId: auth.use('api').user?.id,
                     post: request.input('post')
                 }
-                await Post.create(data)
+                const post = await Post.create(data)
+                return response.created(post)
             } catch (e) {
-                session.flash('erro', 'Erro ao cadastrar post')
+                return response.badRequest(e)
             }
-        return response.redirect().back()
+        } else {return response.unauthorized('tá fazendo o quê aqui')}
     }
 
-    async delete({ response, params, bouncer }: HttpContextContract) {
+    async delete({ response, params }: HttpContextContract) {
         try {
             const post = await Post.findOrFail(params.id)
-            await bouncer.authorize('deletePost', post)
+            // await bouncer.authorize('deletePost', post)
             post.isDeleted = true
             await post.save()
         } catch (e) {
@@ -46,10 +47,10 @@ export default class TwitterController {
         return response.redirect().back()
     }
 
-    async deleteComment({ response, params, bouncer }: HttpContextContract) {
+    async deleteComment({ response, params}: HttpContextContract) {
         try {
             const comment = await Comment.findOrFail(params.id)
-            await bouncer.authorize('deleteComment', comment)
+            //await bouncer.authorize('deleteComment', comment)
             comment.isDeleted = true
             await comment.save()
         } catch (e) {
@@ -58,25 +59,25 @@ export default class TwitterController {
         return response.redirect().back()
     }
 
-    async storeComment({ response, params, request, session, auth }: HttpContextContract) {
+    async storeComment({ response, params, request, auth }: HttpContextContract) {
 
-        if (auth.use('web').user != null)
+        if (auth.use('api').user != null)
             try {
                 const data = {
-                    userId: auth.use('web').user?.id,
+                    userId: auth.use('api').user?.id,
                     postId: params.id,
                     comment: request.input('comment')
                 }
                 await Comment.create(data)
             } catch (e) {
-                session.flash('erro', 'Erro ao cadastrar comment')
+                //session.flash('erro', 'Erro ao cadastrar comment')
             }
         return response.redirect().back()
     }
 
     async follow({ response, params, auth }: HttpContextContract) {
         try {
-            const userIdA = await auth.use('web').user?.id
+            const userIdA = await auth.use('api').user?.id
             const t1 = await Friend.query().orWhere({ userId1: params.id, userId2: userIdA })
                 .orWhere({ userId2: params.id, userId1: userIdA })
             if ((t1.length == 0) && (userIdA != Number(params.id))) {
@@ -94,7 +95,7 @@ export default class TwitterController {
 
     async unFollow({ response, params, auth }: HttpContextContract) {
         try {
-            const userId = await auth.use('web').user?.id
+            const userId = await auth.use('api').user?.id
             await Friend.query()
             .orWhere({
               'user_id1': userId,
@@ -111,23 +112,23 @@ export default class TwitterController {
         response.redirect().back()
     }
 
-    async search({ view, request }: HttpContextContract) {
+    async search({ request }: HttpContextContract) {
         const pesquisa = request.input('login')
         const usuarios = await User.query()
             .orWhereILike('login', '%' + pesquisa + '%')
             .orWhereILike('nome', '%' + pesquisa + '%')
-        return view.render('twitter/pesquisa', {
-            usuarios
-        })
+        // return view.render('twitter/pesquisa', {
+        //     usuarios
+        // })
     }
 
-    async users({ view, auth }: HttpContextContract) {
-        const id = await auth.use('web').user?.id
+    async users({auth }: HttpContextContract) {
+        const id = await auth.use('api').user?.id
         const usuarios = await User.query().orderBy('nome', 'asc')
             .whereNot('id', id)
 
-        return view.render('twitter/pesquisa', {
-            usuarios
-        })
+        // return view.render('twitter/pesquisa', {
+        //     usuarios
+        // })
     }
 }

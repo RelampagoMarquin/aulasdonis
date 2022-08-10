@@ -2,24 +2,25 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import User from 'App/Models/User'
 
 export default class UsersController {
-    async index ({  }: HttpContextContract) {
+    async index ({ response }: HttpContextContract) {
         const usuarios = await User.query()
             .orderBy('created_at', 'desc')
-        return usuarios
+        const r = usuarios.map(u => u.serialize({
+            fields: {
+                omit: ['senha', 'password']
+              }
+        }))
+        return response.ok(r)
+        //return usuarios
     }
 
-    async delete ({ params }: HttpContextContract) {
+    async delete ({ params, response }: HttpContextContract) {
+        const usuario = await User.findOrFail(params.id)
         try {
-            const usuario = await User.findOrFail(params.id)
             await usuario.delete()
-            return{
-                success: true
-            }
+            return response.ok(usuario)
         } catch (e) {
-            return{
-                success: false,
-                error: e
-                }
+            return response.badRequest(e)
         }
     }
 
@@ -27,21 +28,16 @@ export default class UsersController {
      * Método que armazena os dados do formulário de cadastro
      * @param param0 
      */
-    async store ({ request}: HttpContextContract) {
+    async store ({ request, response }: HttpContextContract) {
         const dados = request.only(['nome','login','papel','senha'])
         try {
-            await User.create(dados)
-            return{
-                success: true
-            }
+            const usuario = await User.create(dados)
+            return response.ok(usuario) 
             // comandos para testar os dados
             // console.log(dados)
             // console.log(request.all())
         } catch (e) {
-            return{
-            success: false,
-            error: e
-            }
+            return response.badRequest(e)
         }
     }
 
@@ -49,7 +45,7 @@ export default class UsersController {
      * Armazena as alterações do formulário no BD
      * @param param0 
      */
-    async update ({ params, request}: HttpContextContract) {
+    async update ({ params, request, response}: HttpContextContract) {
         const usuario = await User.findOrFail(params.id)
         usuario.merge(request.only(['nome','login','papel']))
         if (request.input('senha')) {
@@ -58,14 +54,9 @@ export default class UsersController {
         }
         try {
             await usuario.save()
-            return{
-                success: true
-            }
+            return response.ok(usuario)
         } catch (e) {
-            return{
-                success: false,
-                error: e
-                }
+            return response.badRequest(e)
         }
     }
 }

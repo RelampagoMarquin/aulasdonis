@@ -36,9 +36,8 @@ Route.group(() => {
 }).prefix('/usuario')
 
 Route.group(() => {
-  Route.get('/login','AuthController.index').as('auth.index')
   Route.post('/login','AuthController.login').as('auth.login')
-  Route.get('/logout','AuthController.logout').as('auth.logout').middleware('auth')
+  Route.post('/logout','AuthController.logout').as('auth.logout').middleware('auth')
 }).prefix('/auth')
 
 
