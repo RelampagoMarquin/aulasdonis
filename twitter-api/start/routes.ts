@@ -42,12 +42,11 @@ Route.group(() => {
 
 
 Route.group(() => {
+    Route.get('/post','TwitterController.index').as('twitter.index')
     Route.post('/post','TwitterController.store').as('twitter.store')
-    Route.get('/:id/delete','TwitterController.delete').as('twitter.delete')
-    Route.post('/:id/comment','TwitterController.storeComment').as('twitter.comment.store')
-    Route.get('/:id/comment/delete','TwitterController.deleteComment').as('twitter.comment.delete')
-    Route.get('/follow/:id','TwitterController.follow').as('twitter.follow')
-    Route.get('/unFollow/:id','TwitterController.unFollow').as('twitter.unFollow')
-    Route.get('/search','TwitterController.search').as('twitter.search')
-    Route.get('/users','TwitterController.users').as('twitter.users')
+    Route.delete('/post/:id','TwitterController.delete').as('twitter.delete')
+    Route.post('/post/:id/comment','TwitterController.storeComment').as('twitter.comment.store')
+    Route.delete('/:id/comment','TwitterController.deleteComment').as('twitter.comment.delete')
+    Route.post('follow/:id','TwitterController.follow').as('twitter.follow')
+    Route.post('unfollow/:id','TwitterController.unFollow').as('twitter.unFollow')
   }).prefix('/twitter').middleware('auth').where('id', /^[0-9]+$/)

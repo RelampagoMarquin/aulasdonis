@@ -1,0 +1,32 @@
+version: "3.7"
+services:
+  app01:
+    user: $DOCKER_USER
+    image: node:18-alpine3.14
+    working_dir: /app
+    env_file:
+      - ./app01/.env
+    command: sh -c "yarn && yarn dev"
+    volumes:
+      - "./app01/:/app"
+    depends_on: 
+      - redis
+  app02:
+    user: $DOCKER_USER
+    image: node:18-alpine3.14
+    working_dir: /app
+    env_file:
+      - ./app02/.env
+    command: sh -c "yarn && yarn dev"
+    ports:
+      - "3333:3333"
+    volumes:
+      - "./app02/:/app"
+    depends_on: 
+      - redis
+  redis:
+    image: redis:7.0-alpine
+    env_file:
+      - ./app01/.env
+    ports:
+      - "6379:6379"
